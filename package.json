@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "cheerio": "*",
+    "pdfkit": "^0.12.1",
+    "puppeteer": "^8.0.0",
+    "request": "^2.88.2"
+  }
+}
