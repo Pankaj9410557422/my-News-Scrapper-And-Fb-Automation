@@ -1,8 +1,7 @@
 let cheerio = require("cheerio");
 let request = require("request");
-let PDFDocument = require('pdfkit');
 let  puppeteer = require("puppeteer");
-let {phone, pass, filesel} = require("./idpass");
+let {phone, pass} = require("./idpass");
 let fs = require("fs");
 let input = process.argv[2];
 let writeStream = fs.createWriteStream("TopNews.txt");
@@ -71,8 +70,8 @@ async function whatsApp(){
    });
    let newTab =await browserInstance.newPage();
    await newTab.goto("https://www.facebook.com/");
-   await newTab.type("[aria-label='Email address or phone number']",phone);
-   await newTab.type("[aria-label='Password']",pass);
+   await newTab.type("[aria-label='Email address or phone number']",phone,{delay:200});
+   await newTab.type("[aria-label='Password']",pass, {delay:200});
    await newTab.click("button[type='submit']");
    await newTab.waitForSelector("input[type='search']",{visible:true});
    await newTab.click("input[type='search']");
@@ -80,17 +79,23 @@ async function whatsApp(){
    await newTab.keyboard.press("Enter");
    await newTab.waitForSelector("[aria-label='News Headlines']",{visible:true});
    await newTab.click("[aria-label='News Headlines']");
+   await newTab.click("[aria-label='News Headlines']");
    await newTab.waitForSelector("[aria-label='Create Post']",{visible:true});
    await newTab.click("[aria-label='Create Post']");
-   await newTab.waitForSelector("[aria-label='More']",{visible:true});
-   await newTab.click("[aria-label='More']");
+   await newTab.waitForSelector("[aria-label='Add to Your Post']",{visible:true});
+   await newTab.click("[aria-label='Add to Your Post']");
+   await newTab.waitForSelector("[aria-label='Choose File']",{visible:true});
+   await newTab.click("[aria-label='Choose File']");
+   await newTab.waitForSelector("[aria-label='Create Post']",{visible:true});
+   await newTab.click("[aria-label='Create Post']");
    
-   // await newTab.waitForSelector(filesel,{visible:true});
-   // let [filechooser] = await Promise.all([
-   //    newTab.waitForFileChooser(),
-   //    newTab.click(filesel)
-   // ]);
-   // await filechooser.accept(["C:\\Users\\asus.LAPTOP-F97U0B83\\Desktop\\pep tests and assignment\\hackathon\\TopNews.txt"]);
+   let [filechooser] = await Promise.all([
+      newTab.waitForFileChooser(),
+      await newTab.click("[aria-label='Choose File']")
+   ]);
+   await filechooser.accept(["C:\\Users\\asus.LAPTOP-F97U0B83\\Desktop\\pep tests and assignment\\hackathon\\TopNews.txt"]);
+   await newTab.waitForSelector("[aria-label ='Post']", {visible:true});
+   await newTab.click("[aria-label ='Post']");
    //await browserInstance.close();
    //[aria-label='More']
    
